@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include "ui_quizapp.h"
 
 class quizapp : public QMainWindow
@@ -13,6 +15,8 @@ public:
 
 private:
     Ui::quizappClass ui;
+	QNetworkAccessManager* networkManager;
+	QNetworkReply* networkReply;
 
 private slots:
 	void on_login_btn_clicked();
@@ -21,4 +25,5 @@ private slots:
     void handleAnswer();
     void handleInput();
 	void on_submit_btn_clicked();
+	void on_networkReplyFinished();
 };
