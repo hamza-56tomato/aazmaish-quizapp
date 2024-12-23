@@ -42,16 +42,18 @@ color: black;</string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="currentIndex">
-       <number>1</number>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(255, 253, 234);</string>
       </property>
-      <widget class="QWidget" name="page">
+      <property name="currentIndex">
+       <number>3</number>
+      </property>
+      <widget class="QWidget" name="welcomePage">
        <property name="layoutDirection">
         <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>
        <property name="styleSheet">
-        <string notr="true">background: lightgreen;
-</string>
+        <string notr="true"/>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -123,14 +125,14 @@ color: black;</string>
            </spacer>
           </item>
           <item row="0" column="3">
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="teacher_btn">
             <property name="text">
              <string>Continue as Teacher</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QPushButton" name="login_btn">
+           <widget class="QPushButton" name="student_btn">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -193,46 +195,41 @@ color: black;</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_2">
+      <widget class="QWidget" name="loginPage">
        <property name="styleSheet">
-        <string notr="true">background: #f2e4a9;</string>
+        <string notr="true"/>
        </property>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="12" column="1">
-         <spacer name="verticalSpacer_6">
+       <layout class="QGridLayout" name="gridLayout_17">
+        <item row="8" column="0">
+         <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>40</width>
+            <height>20</height>
            </size>
           </property>
          </spacer>
         </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:36pt;&quot;&gt;Question1&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1">
-         <widget class="QRadioButton" name="answer_C">
-          <property name="text">
-           <string>C I am sad</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QRadioButton" name="answer_A">
-          <property name="text">
-           <string>A I am fine</string>
-          </property>
-         </widget>
-        </item>
         <item row="7" column="2">
+         <spacer name="verticalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Policy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="8" column="4">
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Orientation::Horizontal</enum>
@@ -245,78 +242,84 @@ color: black;</string>
           </property>
          </spacer>
         </item>
-        <item row="10" column="1">
-         <widget class="QPushButton" name="submit_btn">
-          <property name="text">
-           <string>submit</string>
+        <item row="1" column="2">
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
-        <item row="4" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
+        <item row="8" column="1" colspan="3">
+         <layout class="QGridLayout" name="gridLayout_15">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="login_btn">
+            <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>70</width>
+              <height>16777215</height>
              </size>
             </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="checkBox">
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
             <property name="text">
-             <string>yesss</string>
+             <string>Login</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
+         </layout>
+        </item>
+        <item row="11" column="1" colspan="3">
+         <layout class="QGridLayout" name="gridLayout_16">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="goto_signup_btn">
+            <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>70</width>
+              <height>16777215</height>
              </size>
             </property>
-           </spacer>
+            <property name="text">
+             <string>Sign Up</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
-        <item row="11" column="1">
-         <layout class="QVBoxLayout" name="verticalLayout"/>
-        </item>
-        <item row="9" column="1">
-         <widget class="QRadioButton" name="answer_D">
+        <item row="3" column="2">
+         <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>D I am eating kebab</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Login&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="1">
-         <widget class="QRadioButton" name="answer_B">
+        <item row="10" column="1" colspan="3">
+         <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>B I am fat</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Don't have an account?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="answer_text">
-          <property name="styleSheet">
-           <string notr="true">background-color: azure;</string>
+        <item row="9" column="2">
+         <spacer name="verticalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
-          <property name="text">
-           <string/>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-         </widget>
+         </spacer>
         </item>
-        <item row="0" column="1">
+        <item row="4" column="2">
          <spacer name="verticalSpacer_5">
           <property name="orientation">
            <enum>Qt::Orientation::Vertical</enum>
@@ -329,8 +332,53 @@ color: black;</string>
           </property>
          </spacer>
         </item>
+        <item row="12" column="2">
+         <spacer name="verticalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="5" column="2" rowspan="2">
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Email: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="login_password_input">
+            <property name="styleSheet">
+             <string notr="true">background: white;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="login_email_input">
+            <property name="styleSheet">
+             <string notr="true">background: white;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Password: </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item row="0" column="0">
-         <widget class="QPushButton" name="back_btn">
+         <widget class="QPushButton" name="login_back_btn">
           <property name="maximumSize">
            <size>
             <width>100</width>
@@ -346,63 +394,215 @@ color: black;</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <spacer name="verticalSpacer_4">
+       </layout>
+      </widget>
+      <widget class="QWidget" name="signUpPage">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="signup_back_btn">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background: #00beef;
+</string>
+          </property>
+          <property name="text">
+           <string>back</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <spacer name="verticalSpacer_9">
           <property name="orientation">
            <enum>Qt::Orientation::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="6" column="0">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
+            <height>82</height>
            </size>
           </property>
          </spacer>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="reply">
+         <widget class="QLabel" name="label_8">
           <property name="text">
-           <string>TextLabel</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Create An Account&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
+        <item row="3" column="1">
+         <spacer name="verticalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>82</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="4" column="1">
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Password: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="signup_email_input">
+            <property name="styleSheet">
+             <string notr="true">background: white;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Email: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="signup_password_input">
+            <property name="styleSheet">
+             <string notr="true">background: white;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="signup_name_input">
+            <property name="styleSheet">
+             <string notr="true">background: white;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Name:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="5" column="1">
+         <spacer name="verticalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>83</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="6" column="0">
+         <spacer name="horizontalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>277</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="6" column="1">
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="signup_btn">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Sign Up</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="6" column="2">
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>277</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="7" column="1">
+         <spacer name="verticalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>82</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="8" column="1">
+         <spacer name="verticalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>82</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_3">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <widget class="QLabel" name="answer_label">
+      <widget class="QWidget" name="signupSuccess">
+       <widget class="QLabel" name="status">
         <property name="geometry">
          <rect>
-          <x>310</x>
-          <y>240</y>
-          <width>251</width>
-          <height>171</height>
+          <x>210</x>
+          <y>150</y>
+          <width>581</width>
+          <height>431</height>
          </rect>
         </property>
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:28pt;&quot;&gt;TextLabel&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Sign up Success!</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="back_btn_2">
+       <widget class="QPushButton" name="signup_success_back_btn">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>60</x>
+          <y>70</y>
           <width>100</width>
           <height>24</height>
          </rect>
