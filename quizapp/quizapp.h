@@ -19,6 +19,7 @@ private:
 	TeacherPortal* teacherPortal;
 	Auth* auth;
 	bool isTeacher;
+	QString idToken;
 
 public slots: 
 	void on_student_btn_clicked();
@@ -29,4 +30,6 @@ public slots:
 	void on_signup_back_btn_clicked();
 	void on_signup_btn_clicked();
 	void on_signup_success_back_btn_clicked();
+	void on_userSignedIn(QString idToken);
+	void teacherCodeVerification();
 };

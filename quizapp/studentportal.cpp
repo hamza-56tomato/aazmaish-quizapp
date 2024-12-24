@@ -6,7 +6,7 @@
 #include <QJsonValue>
 #include <QDebug>
 
-StudentPortal::StudentPortal(Ui::quizappClass* uiPtr, QObject* parent)
+StudentPortal::StudentPortal(QObject* parent, Ui::quizappClass* uiPtr) 
 	: QObject(parent), ui(uiPtr)
 {
 	/*networkManager = new QNetworkAccessManager(this);
@@ -19,3 +19,7 @@ StudentPortal::~StudentPortal()
 	
 }
 
+void StudentPortal::setIDToken(const QString& idToken_p)
+{
+	idToken = idToken_p;
+}

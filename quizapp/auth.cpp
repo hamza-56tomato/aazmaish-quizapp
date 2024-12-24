@@ -46,8 +46,8 @@ void Auth::performPOST(const QString& url, const QJsonDocument& payload)
 }
 void Auth::on_networkReplyFinished() {
 	QByteArray response = networkReply->readAll();
-	ui->status->setText(response);
-	ui->stackedWidget->setCurrentWidget(ui->signupSuccess);
+	/*ui->status->setText(response);
+	ui->stackedWidget->setCurrentWidget(ui->signupSuccess);*/
 	parseReponse(response);
 	networkReply->deleteLater();
 }
@@ -55,13 +55,12 @@ void Auth::parseReponse(const QByteArray& response) {
 	QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
 	if (jsonDoc.object().contains("error")) {
 		QJsonObject error = jsonDoc.object()["error"].toObject();
-		QMessageBox::warning(nullptr, "Error", error["message"].toString() + "\nPlease return to login page");
-		ui->stackedWidget->setCurrentWidget(ui->loginPage);
+		QMessageBox::warning(nullptr, "Error", error["message"].toString());
 		return;
 	}
 	if (jsonDoc.object().contains("kind")) {
 		idToken = jsonDoc.object()["idToken"].toString();
-		emit userSignedIn();
+		emit userSignedIn(idToken);
 	}
 
 	

@@ -6,15 +6,15 @@
 class StudentPortal : public QObject
 {
 	Q_OBJECT
-public:
-	StudentPortal(Ui::quizappClass* uiPtr, QObject* parent = nullptr);
-	~StudentPortal();
-
 private:
-	Ui::quizappClass *ui;
-	
+	Ui::quizappClass* ui;
+	QString idToken;
 	/*QNetworkAccessManager* networkManager;
 	QNetworkReply* networkReply;*/
+public:
+	StudentPortal(QObject* parent = nullptr, Ui::quizappClass * uiPtr = nullptr);
+	~StudentPortal();
+	void setIDToken(const QString& idToken_p);
 
 public slots:
 	

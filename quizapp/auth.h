@@ -14,7 +14,6 @@ public:
 	void signUp(const QString& email, const QString& password);
 	void signIn(const QString& email, const QString& password);
     
-	void signOut();
 private:
 	Ui::quizappClass* ui;
 	QString apiKey;
@@ -26,5 +25,5 @@ private:
 public slots:
 	void on_networkReplyFinished();
 signals:
-	void userSignedIn();
+	void userSignedIn(QString);
 };
