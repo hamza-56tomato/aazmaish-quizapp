@@ -11,6 +11,9 @@
 #include <QFile>
 #include <QMessageBox>
 #include <qDebug>
+#include <QFont>
+#include <QUrl>
+#include <QUrlQuery>
 
 TeacherPortal::TeacherPortal(QObject* parent, Ui::quizappClass* uiPtr)
     : QObject(parent), ui(uiPtr)
@@ -23,7 +26,9 @@ TeacherPortal::TeacherPortal(QObject* parent, Ui::quizappClass* uiPtr)
     connect(ui->submit_quiz_btn, &QPushButton::clicked, this, &TeacherPortal::on_submit_quiz_button_clicked);
     connect(ui->signOut_btn, &QPushButton::clicked, this, &TeacherPortal::on_signOut_btn_clicked);
 	connect(ui->create_quiz_back_btn, &QPushButton::clicked, this, &TeacherPortal::on_create_quiz_back_btn_clicked);
+	connect(ui->edit_quiz_back_btn, &QPushButton::clicked, this, &TeacherPortal::on_edit_quiz_back_btn_clicked);
 	connect(ui->clear_quiz_inputs_btn, &QPushButton::clicked, this, &TeacherPortal::clear_quiz_inputs);
+	connect(ui->edit_quiz_btn, &QPushButton::clicked, this, &TeacherPortal::on_edit_quiz_btn_clicked);
 
     QuestionEntry entry;
     QButtonGroup* correctAnswerGroup = new QButtonGroup(this);
@@ -40,15 +45,25 @@ TeacherPortal::TeacherPortal(QObject* parent, Ui::quizappClass* uiPtr)
     questionsList.append(entry);
 }
 TeacherPortal::~TeacherPortal() {
-    
+	networkManager->deleteLater();
 }
 void TeacherPortal::on_signOut_btn_clicked() {
 	clear_quiz_inputs();
     ui->stackedWidget->setCurrentWidget(ui->welcomePage);
+    ui->teacher_name_label->setText("Loading...");
+    ui->teacher_email_label->clear();
 	this->~TeacherPortal();
 }
 void TeacherPortal::on_create_quiz_back_btn_clicked() {
 	ui->stackedWidget->setCurrentWidget(ui->teacherPortal);
+}
+void TeacherPortal::on_edit_quiz_back_btn_clicked() {
+	ui->stackedWidget->setCurrentWidget(ui->teacherPortal);
+    QLayoutItem* item;
+    while ((item = ui->edit_quizzes_list->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
 }
 void TeacherPortal::setIDToken(const QString& idToken_p) {
 	idToken = idToken_p;
@@ -223,6 +238,8 @@ void TeacherPortal::on_submit_quiz_button_clicked()
 	quizObject["quizName"] = ui->quiz_name_input->text();
 	quizObject["quizTime"] = ui->quiz_time_input->text();
     quizObject["questions"] = questionArray;
+	quizObject["teacherName"] = teacherName;
+	quizObject["teacherEmail"] = teacherEmail;
 
     QJsonDocument jsonDoc(quizObject);
 
@@ -243,3 +260,87 @@ void TeacherPortal::on_create_quiz_reply_finished() {
     networkReply->deleteLater();
 }
 
+void TeacherPortal::setTeacherName(const QString& name) {
+	teacherName = name;
+
+	ui->teacher_name_label->setText(teacherName);
+    QFont f;
+	f.setPointSize(36);
+	ui->teacher_name_label->setFont(f);
+	ui->teacher_name_label->setAlignment(Qt::AlignCenter);
+}
+
+void TeacherPortal::setTeacherEmail(const QString& email) {
+	teacherEmail = email;
+	ui->teacher_email_label->setText(teacherEmail);
+	ui->teacher_email_label->setAlignment(Qt::AlignCenter);
+}
+
+void TeacherPortal::on_edit_quiz_btn_clicked() {
+    QUrl url("https://aazmaish-quizapp-default-rtdb.asia-southeast1.firebasedatabase.app/Quizzes.json");
+    networkReply = networkManager->get(QNetworkRequest(url));
+    connect(networkReply, &QNetworkReply::finished, this, [this]() {
+        ui->stackedWidget->setCurrentWidget(ui->editQuizPage);
+        QByteArray response = networkReply->readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        if (jsonDoc.object().contains("error")) {
+            qDebug() << jsonDoc.object();
+            QJsonObject error = jsonDoc.object()["error"].toObject();
+            QMessageBox::warning(nullptr, "Error", error["message"].toString());
+            return;
+        }
+        QJsonObject quizzes = jsonDoc.object();
+        quizzesList.clear();
+        for (const QString& key : quizzes.keys()) {
+            QJsonObject quiz = quizzes[key].toObject();
+            // Check if the teacherEmail matches
+            if (quiz["teacherEmail"].toString() == teacherEmail) {
+                QuizzesData data;
+                data.quizName = quiz["quizName"].toString();
+                data.quizTime = quiz["quizTime"].toString();
+                data.quizID = key;
+                quizzesList.append(data);
+            }
+        }
+        generate_quizzes_to_edit();
+        networkReply->deleteLater();
+        });
+}
+
+void TeacherPortal::generate_quizzes_to_edit() {
+	//generate widgets for each quiz
+	for (const QuizzesData& quiz : quizzesList) {
+        QWidget* container = new QWidget;
+        QGridLayout* gridLayout = new QGridLayout();
+        gridLayout->setHorizontalSpacing(20);
+        QLabel* label1 = new QLabel(quiz.quizName);
+        QLabel* label2 = new QLabel(quiz.quizTime);
+		label1->setStyleSheet("font-size: 14px;");
+        gridLayout->addWidget(label1, 0, 0);
+        gridLayout->addWidget(label2, 0, 1);
+        QSpacerItem* horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        gridLayout->addItem(horizontalSpacer, 0, 2);
+        QPushButton* deleteButton = new QPushButton("Delete Quiz");
+        gridLayout->addWidget(deleteButton, 0, 3);
+        container->setLayout(gridLayout);
+        ui->edit_quizzes_list->addWidget(container);
+		connect(deleteButton, &QPushButton::clicked, this, [this, quiz, container]() {
+			QUrl url(QString("https://aazmaish-quizapp-default-rtdb.asia-southeast1.firebasedatabase.app/Quizzes/%1.json").arg(quiz.quizID));
+			networkReply = networkManager->deleteResource(QNetworkRequest(url));
+			connect(networkReply, &QNetworkReply::finished, this, [this, container]() {
+				QByteArray response = networkReply->readAll();
+				QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+				if (jsonDoc.object().contains("error")) {
+					QJsonObject error = jsonDoc.object()["error"].toObject();
+					QMessageBox::warning(nullptr, "Error", error["message"].toString());
+					return;
+				}
+				QMessageBox::information(nullptr, "Success", "Quiz deleted successfully");
+				networkReply->deleteLater();
+				ui->edit_quizzes_list->removeWidget(container);
+                delete container;
+				});
+			});
+	}
+	
+}

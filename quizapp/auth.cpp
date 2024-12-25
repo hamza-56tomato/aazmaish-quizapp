@@ -17,6 +17,7 @@ void Auth::setAPIkey(const QString& key)
 }
 void Auth::signUp(const QString& email, const QString& password)
 {
+	is_signUp = true;
 	QJsonDocument payload;
 	QVariantMap payloadMap;
 	payloadMap["email"] = email;
@@ -28,6 +29,7 @@ void Auth::signUp(const QString& email, const QString& password)
 
 void Auth::signIn(const QString& email, const QString& password)
 {
+	is_signUp = false;
 	QJsonDocument payload;
 	QVariantMap payloadMap;
 	payloadMap["email"] = email;
@@ -46,12 +48,6 @@ void Auth::performPOST(const QString& url, const QJsonDocument& payload)
 }
 void Auth::on_networkReplyFinished() {
 	QByteArray response = networkReply->readAll();
-	/*ui->status->setText(response);
-	ui->stackedWidget->setCurrentWidget(ui->signupSuccess);*/
-	parseReponse(response);
-	networkReply->deleteLater();
-}
-void Auth::parseReponse(const QByteArray& response) {
 	QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
 	if (jsonDoc.object().contains("error")) {
 		QJsonObject error = jsonDoc.object()["error"].toObject();
@@ -60,8 +56,8 @@ void Auth::parseReponse(const QByteArray& response) {
 	}
 	if (jsonDoc.object().contains("kind")) {
 		idToken = jsonDoc.object()["idToken"].toString();
-		emit userSignedIn(idToken);
+		emit userSignedIn(idToken, is_signUp);
 	}
-
-	
+	networkReply->deleteLater();
 }
+

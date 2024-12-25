@@ -21,9 +21,9 @@ private:
 	QNetworkAccessManager* networkManager;
 	QNetworkReply* networkReply;
 	void performPOST(const QString& url, const QJsonDocument& payload);
-	void parseReponse(const QByteArray& response);
+	bool is_signUp;
 public slots:
 	void on_networkReplyFinished();
 signals:
-	void userSignedIn(QString);
+	void userSignedIn(QString, bool);
 };

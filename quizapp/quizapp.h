@@ -5,6 +5,8 @@
 #include "studentportal.h"
 #include "teacherportal.h"
 #include "auth.h"
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 class quizapp : public QMainWindow
 {
 	Q_OBJECT
@@ -12,6 +14,8 @@ class quizapp : public QMainWindow
 public:
 	quizapp(QWidget *parent = nullptr);
 	~quizapp();
+	QNetworkAccessManager* networkManager;
+	QNetworkReply* networkReply;
 
 private:
 	Ui::quizappClass ui;
@@ -20,6 +24,7 @@ private:
 	Auth* auth;
 	bool isTeacher;
 	QString idToken;
+	bool signUp;
 
 public slots: 
 	void on_student_btn_clicked();
@@ -29,7 +34,8 @@ public slots:
 	void on_login_back_btn_clicked();
 	void on_signup_back_btn_clicked();
 	void on_signup_btn_clicked();
-	void on_signup_success_back_btn_clicked();
-	void on_userSignedIn(QString idToken);
+	void on_userSignedIn(QString idToken_p, bool is_signUp);
 	void teacherCodeVerification();
+	void sendUserData();
+	void on_userData_sent();
 };
