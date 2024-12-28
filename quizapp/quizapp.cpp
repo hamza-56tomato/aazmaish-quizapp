@@ -9,7 +9,7 @@ quizapp::quizapp(QWidget* parent)
 	teacherPortal = nullptr;
 	studentPortal = nullptr;
     ui.setupUi(this);
-	ui.stackedWidget->setCurrentIndex(0);
+	ui.stackedWidget->setCurrentWidget(ui.welcomePage);
     this->showMaximized();
 	isTeacher = false;
 	networkManager = new QNetworkAccessManager(this);
@@ -29,6 +29,8 @@ quizapp::~quizapp()
 
 void quizapp::on_userSignedIn(QString idToken_p, bool is_signUp)
 {
+	QString email;
+	QString name;
 	idToken = idToken_p;
 	if (isTeacher) {
 		ui.stackedWidget->setCurrentWidget(ui.teacherPortal);
@@ -40,30 +42,7 @@ void quizapp::on_userSignedIn(QString idToken_p, bool is_signUp)
 			sendUserData();
 		}
 		else {
-			networkReply = networkManager->get(QNetworkRequest(QUrl("https://aazmaish-quizapp-default-rtdb.asia-southeast1.firebasedatabase.app/users.json")));
-			connect(networkReply, &QNetworkReply::finished, this, [this]() {
-					QByteArray response = networkReply->readAll();
-					QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
-					QJsonObject users = jsonDoc.object();
-					
-					if (users.contains("error")) {
-						QJsonObject error = users["error"].toObject();
-						QMessageBox::warning(nullptr, "Error", error["message"].toString());
-						return;
-					}
-					for (QString key : users.keys()) {
-						QJsonObject userObject = users.value(key).toObject();
-						QString email = ui.login_email_input->text();
-						if (userObject["email"].toString() == email) {
-							teacherPortal->setTeacherName(userObject["name"].toString());
-							teacherPortal->setTeacherEmail(userObject["email"].toString());
-							break;
-						}
-					}
-					networkReply->deleteLater();
-					ui.login_email_input->clear();
-					ui.login_password_input->clear();
-				});
+			getUsers();
 		}
 	}
 	else {
@@ -72,10 +51,45 @@ void quizapp::on_userSignedIn(QString idToken_p, bool is_signUp)
 		studentPortal->setIDToken(idToken);
 		if (is_signUp) {
 			sendUserData();
+			studentPortal->setStudentName(ui.signup_name_input->text());
+			studentPortal->setStudentEmail(ui.signup_email_input->text());
+		}
+		else {
+			getUsers();
 		}
 	}
-	/*ui.login_password_input->clear();
-	ui.login_email_input->clear();*/
+}
+void quizapp::getUsers() {
+	networkReply = networkManager->get(QNetworkRequest(QUrl("https://aazmaish-quizapp-default-rtdb.asia-southeast1.firebasedatabase.app/users.json")));
+	connect(networkReply, &QNetworkReply::finished, this, [this]() {
+		QByteArray response = networkReply->readAll();
+		QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+		QJsonObject users = jsonDoc.object();
+
+		if (users.contains("error")) {
+			QJsonObject error = users["error"].toObject();
+			QMessageBox::warning(nullptr, "Error", error["message"].toString());
+			return;
+		}
+		for (QString key : users.keys()) {
+			QJsonObject userObject = users.value(key).toObject();
+			QString email = ui.login_email_input->text();
+			if (userObject["email"].toString() == email) {
+				if (isTeacher) {
+					teacherPortal->setTeacherName(userObject["name"].toString());
+					teacherPortal->setTeacherEmail(userObject["email"].toString());
+				}
+				else {
+					studentPortal->setStudentName(userObject["name"].toString());
+					studentPortal->setStudentEmail(userObject["email"].toString());
+				}
+				break;
+			}
+		}
+		networkReply->deleteLater();
+		ui.login_email_input->clear();
+		ui.login_password_input->clear();
+	});
 }
 
 void quizapp::on_login_btn_clicked()

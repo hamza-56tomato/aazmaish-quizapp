@@ -29,6 +29,9 @@ TeacherPortal::TeacherPortal(QObject* parent, Ui::quizappClass* uiPtr)
 	connect(ui->edit_quiz_back_btn, &QPushButton::clicked, this, &TeacherPortal::on_edit_quiz_back_btn_clicked);
 	connect(ui->clear_quiz_inputs_btn, &QPushButton::clicked, this, &TeacherPortal::clear_quiz_inputs);
 	connect(ui->edit_quiz_btn, &QPushButton::clicked, this, &TeacherPortal::on_edit_quiz_btn_clicked);
+	connect(ui->view_marks_btn, &QPushButton::clicked, this, &TeacherPortal::on_view_marks_btn_clicked);
+	connect(ui->view_marks_back_btn, &QPushButton::clicked, this, &TeacherPortal::on_view_marks_back_btn_clicked);
+	connect(ui->marks_back_btn, &QPushButton::clicked, this, &TeacherPortal::on_marks_back_btn_clicked);
 
     QuestionEntry entry;
     QButtonGroup* correctAnswerGroup = new QButtonGroup(this);
@@ -64,6 +67,7 @@ void TeacherPortal::on_edit_quiz_back_btn_clicked() {
         delete item->widget();
         delete item;
     }
+	quizzesList.clear();
 }
 void TeacherPortal::setIDToken(const QString& idToken_p) {
 	idToken = idToken_p;
@@ -315,13 +319,15 @@ void TeacherPortal::generate_quizzes_to_edit() {
         gridLayout->setHorizontalSpacing(20);
         QLabel* label1 = new QLabel(quiz.quizName);
         QLabel* label2 = new QLabel(quiz.quizTime);
-		label1->setStyleSheet("font-size: 14px;");
+		label1->setStyleSheet("font-size: 24px;");
+        container->setStyleSheet("background-color: azure;");
         gridLayout->addWidget(label1, 0, 0);
-        gridLayout->addWidget(label2, 0, 1);
+        gridLayout->addWidget(label2, 1, 0);
         QSpacerItem* horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
         gridLayout->addItem(horizontalSpacer, 0, 2);
         QPushButton* deleteButton = new QPushButton("Delete Quiz");
-        gridLayout->addWidget(deleteButton, 0, 3);
+        deleteButton->setStyleSheet("background-color: #ff474c;font-weight: bold;");
+        gridLayout->addWidget(deleteButton, 0, 3, 2, 1);
         container->setLayout(gridLayout);
         ui->edit_quizzes_list->addWidget(container);
 		connect(deleteButton, &QPushButton::clicked, this, [this, quiz, container]() {
@@ -342,5 +348,118 @@ void TeacherPortal::generate_quizzes_to_edit() {
 				});
 			});
 	}
-	
+}
+
+void TeacherPortal::on_view_marks_btn_clicked() {
+    QUrl url("https://aazmaish-quizapp-default-rtdb.asia-southeast1.firebasedatabase.app/Quizzes.json");
+    networkReply = networkManager->get(QNetworkRequest(url));
+    connect(networkReply, &QNetworkReply::finished, this, [this]() {
+        ui->stackedWidget->setCurrentWidget(ui->viewMarksPage);
+        QByteArray response = networkReply->readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+        if (jsonDoc.object().contains("error")) {
+            qDebug() << jsonDoc.object();
+            QJsonObject error = jsonDoc.object()["error"].toObject();
+            QMessageBox::warning(nullptr, "Error", error["message"].toString());
+            return;
+        }
+        QJsonObject quizzes = jsonDoc.object();
+        quizzesList.clear();
+        for (const QString& key : quizzes.keys()) {
+            QJsonObject quiz = quizzes[key].toObject();
+            // Check if the teacherEmail matches
+            if (quiz["teacherEmail"].toString() == teacherEmail) {
+                QuizzesData data;
+                data.quizName = quiz["quizName"].toString();
+                data.quizTime = quiz["quizTime"].toString();
+                data.quizID = key;
+                quizzesList.append(data);
+            }
+        }
+        generate_quizzes_to_view_marks();
+		networkReply->deleteLater();
+	});
+}
+void TeacherPortal::generate_quizzes_to_view_marks() {
+    //generate widgets for each quiz
+    for (const QuizzesData& quiz : quizzesList) {
+        QWidget* container = new QWidget;
+        QGridLayout* gridLayout = new QGridLayout();
+        gridLayout->setHorizontalSpacing(20);
+        QLabel* label1 = new QLabel(quiz.quizName);
+        QLabel* label2 = new QLabel(quiz.quizTime);
+        label1->setStyleSheet("font-size: 24px;");
+        container->setStyleSheet("background-color: azure;");
+        gridLayout->addWidget(label1, 0, 0);
+        gridLayout->addWidget(label2, 1, 0);
+        QSpacerItem* horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        gridLayout->addItem(horizontalSpacer, 0, 2);
+        QPushButton* viewMarksButton = new QPushButton("View Marks");
+        viewMarksButton->setStyleSheet("background-color: #ababab;");
+        gridLayout->addWidget(viewMarksButton, 0, 3, 2, 1);
+        container->setLayout(gridLayout);
+        ui->quizzesList_marks->addWidget(container);
+        connect(viewMarksButton, &QPushButton::clicked, this, [this, quiz]() {
+            QUrl url("https://aazmaish-quizapp-default-rtdb.asia-southeast1.firebasedatabase.app/marks.json");
+			networkReply = networkManager->get(QNetworkRequest(url));
+            connect(networkReply, &QNetworkReply::finished, this, [this, quiz]() {
+                QByteArray response = networkReply->readAll();
+                QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+                if (jsonDoc.object().contains("error")) {
+                    QJsonObject error = jsonDoc.object()["error"].toObject();
+                    QMessageBox::warning(nullptr, "Error", error["message"].toString());
+                    return;
+                }
+				QJsonObject marksObj = jsonDoc.object();
+				for (QString key : marksObj.keys()) {
+					QJsonObject markObject = marksObj.value(key).toObject();
+					if (markObject["quizName"].toString() == quiz.quizName && markObject["teacherEmail"].toString() == teacherEmail) {
+						int marks = markObject["marks"].toInt();
+						int totalMarks = markObject["totalMarks"].toInt();
+                        qDebug() << marks << totalMarks;
+						QString studentEmail = markObject["studentEmail"].toString();
+						QString studentName = markObject["studentName"].toString();
+						generate_student_marks(QString::number(marks), QString::number(totalMarks), studentName, studentEmail);
+					}
+				}
+                ui->stackedWidget->setCurrentWidget(ui->marksPage);
+				networkReply->deleteLater();
+             });
+        });
+    }
+}
+void TeacherPortal::generate_student_marks(const QString& marks, const QString& totalMarks, const QString& studentName, const QString& studentEmail) {
+	QWidget* container = new QWidget;
+	QGridLayout* gridLayout = new QGridLayout();
+	gridLayout->setHorizontalSpacing(20);
+	QLabel* label1 = new QLabel("Name: " + studentName);
+	QLabel* label2 = new QLabel("Email: " + studentEmail);
+	QLabel* label3 = new QLabel("Marks: " + marks + "/" + totalMarks);
+	label1->setStyleSheet("font-size: 20px;");
+    label2->setStyleSheet("font-size: 20px;");
+	label3->setStyleSheet("font-size: 20px;");
+	container->setStyleSheet("background-color: azure;");
+	gridLayout->addWidget(label1, 0, 0);
+	gridLayout->addWidget(label2, 1, 0);
+	gridLayout->addWidget(label3, 2, 0);
+	container->setLayout(gridLayout);
+	ui->marks_list->addWidget(container);
+}
+void TeacherPortal::on_view_marks_back_btn_clicked() {
+	ui->stackedWidget->setCurrentWidget(ui->teacherPortal);
+    QLayoutItem* item;
+    while ((item = ui->quizzesList_marks->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
+    quizzesList.clear();
+}
+
+void TeacherPortal::on_marks_back_btn_clicked() {
+	ui->stackedWidget->setCurrentWidget(ui->viewMarksPage);
+    QLayoutItem* item;
+    while ((item = ui->marks_list->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
 }

@@ -25,6 +25,7 @@ private:
 	bool isTeacher;
 	QString idToken;
 	bool signUp;
+	void getUsers();
 
 public slots: 
 	void on_student_btn_clicked();

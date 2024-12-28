@@ -41,6 +41,10 @@ private:
     };
     QList<QuestionEntry> questionsList;
 	QList<QuizzesData> quizzesList;
+
+    void generate_quizzes_to_edit();
+    void generate_quizzes_to_view_marks();
+    void generate_student_marks(const QString& marks, const QString& totalMarks, const QString& studentName, const QString& studentEmail);
 public slots:
     void addNewQuestion();
     void on_create_quiz_btn_clicked();
@@ -50,7 +54,8 @@ public slots:
     void on_create_quiz_back_btn_clicked();
     void on_edit_quiz_back_btn_clicked();
     void clear_quiz_inputs();
-
 	void on_edit_quiz_btn_clicked();
-	void generate_quizzes_to_edit();
+    void on_view_marks_btn_clicked();
+    void on_view_marks_back_btn_clicked();
+    void on_marks_back_btn_clicked();
 };
