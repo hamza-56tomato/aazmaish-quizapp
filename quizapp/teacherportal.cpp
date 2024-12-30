@@ -348,6 +348,11 @@ void TeacherPortal::generate_quizzes_to_edit() {
 				});
 			});
 	}
+	if (quizzesList.empty()) {
+		QLabel* label = new QLabel("No quizzes found");
+		label->setStyleSheet("font-size: 24px;");
+		ui->edit_quizzes_list->addWidget(label);
+	}
 }
 
 void TeacherPortal::on_view_marks_btn_clicked() {
@@ -422,11 +427,21 @@ void TeacherPortal::generate_quizzes_to_view_marks() {
 						generate_student_marks(QString::number(marks), QString::number(totalMarks), studentName, studentEmail);
 					}
 				}
+				if (ui->marks_list->count() == 0) {
+					QLabel* label = new QLabel("No student has attempted this quiz yet");
+					label->setStyleSheet("font-size: 24px;");
+					ui->marks_list->addWidget(label);
+				}
                 ui->stackedWidget->setCurrentWidget(ui->marksPage);
 				networkReply->deleteLater();
              });
         });
     }
+	if (quizzesList.empty()) {
+		QLabel* label = new QLabel("No quizzes found");
+		label->setStyleSheet("font-size: 24px;");
+		ui->quizzesList_marks->addWidget(label);
+	}
 }
 void TeacherPortal::generate_student_marks(const QString& marks, const QString& totalMarks, const QString& studentName, const QString& studentEmail) {
 	QWidget* container = new QWidget;
