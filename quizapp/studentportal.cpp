@@ -68,6 +68,8 @@ void StudentPortal::fetchQuizzesFromFirebase() {
     QNetworkRequest request(url);
     QNetworkReply* reply = manager->get(request);
 
+
+
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() == QNetworkReply::NoError) {
             QByteArray responseData = reply->readAll();

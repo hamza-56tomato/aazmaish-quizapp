@@ -50,9 +50,9 @@ void quizapp::on_userSignedIn(QString idToken_p, bool is_signUp)
 		studentPortal = new StudentPortal(this, &ui);
 		studentPortal->setIDToken(idToken);
 		if (is_signUp) {
-			sendUserData();
 			studentPortal->setStudentName(ui.signup_name_input->text());
 			studentPortal->setStudentEmail(ui.signup_email_input->text());
+			sendUserData();
 		}
 		else {
 			getUsers();
