@@ -198,14 +198,6 @@ void TeacherPortal::on_submit_quiz_button_clicked()
         QString optionD = entry.optionD->text();
 
         int correctOptionId = entry.correctAnswerGroup->checkedId();
-        entry.question->clear();
-		entry.optionA->clear();
-        entry.optionB->clear();
-        entry.optionC->clear();
-		entry.optionD->clear();
-        foreach(QAbstractButton* button, entry.correctAnswerGroup->buttons()) {
-            button->setChecked(false); // Uncheck the button
-        }
         QString correctOption;
         switch (correctOptionId)
         {
@@ -260,6 +252,7 @@ void TeacherPortal::on_create_quiz_reply_finished() {
         return;
     }
     QMessageBox::information(nullptr, "Success", "Quiz created successfully");
+	clear_quiz_inputs();
     ui->stackedWidget->setCurrentWidget(ui->teacherPortal);
     networkReply->deleteLater();
 }
